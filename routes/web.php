@@ -1,8 +1,14 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+
+    if (auth()->guest()) {
+        // return redirect()->route('sso.login');
+    }
+
     return view('welcome');
 });
 
