@@ -12,7 +12,7 @@
                             <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('SSO Login') }}</label>
                             <div class="col-lg-6">
                                 <a href="{{ route('sso.login') }}" class="btn btn-success">
-                                    Login with Laravel Server
+                                    Login with Laravel Host
                                 </a>
                             </div>
                         </div>
