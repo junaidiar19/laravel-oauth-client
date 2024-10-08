@@ -14,14 +14,14 @@ class SSOController extends Controller
         $request->session()->put('state', $state = str()->random(40));
 
         $query = http_build_query([
-            'client_id' => env('LARAVEL_SERVER_CLIENT_ID'),
+            'client_id' => env('LARAVEL_HOST_CLIENT_ID'),
             'redirect_uri' => route('sso.callback'),
             'response_type' => 'code',
             'scope' => 'view-user',
             'state' => $state,
         ]);
 
-        return redirect(env('LARAVEL_SERVER_AUTHORIZE') . '?' . $query);
+        return redirect(env('LARAVEL_HOST_AUTHORIZE') . '?' . $query);
     }
 
     public function callback(Request $request)
@@ -34,10 +34,10 @@ class SSOController extends Controller
             'Invalid state value.'
         );
 
-        $response = Http::asForm()->post(env('LARAVEL_SERVER_REQUEST_TOKEN'), [
+        $response = Http::asForm()->post(env('LARAVEL_HOST_REQUEST_TOKEN'), [
             'grant_type' => 'authorization_code',
-            'client_id' => env('LARAVEL_SERVER_CLIENT_ID'),
-            'client_secret' => env('LARAVEL_SERVER_CLIENT_SECRET'),
+            'client_id' => env('LARAVEL_HOST_CLIENT_ID'),
+            'client_secret' => env('LARAVEL_HOST_CLIENT_SECRET'),
             'redirect_uri' => route('sso.callback'),
             'code' => $request->code,
         ]);
@@ -54,7 +54,7 @@ class SSOController extends Controller
         $response = Http::withHeaders([
             "accept" => "application/json",
             "Authorization" => "$token_type $access_token",
-        ])->get(env('LARAVEL_SERVER_GET_USER'));
+        ])->get(env('LARAVEL_HOST_GET_USER'));
 
         $getUser = $response->object();
 
@@ -74,7 +74,7 @@ class SSOController extends Controller
                 'name' => $getUser->name,
                 'email' => $getUser->email,
                 'email_verified_at' => $getUser->email_verified_at,
-                'provider' => 'laravel_server',
+                'provider' => 'LARAVEL_HOST',
                 'provider_id' => $getUser->id,
                 'access_token' => $access_token,
             ]);
